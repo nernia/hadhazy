@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="de">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nernia - itt van a magyarok pénze</title>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+	
     <style>
         body, html {
             margin: 0;
@@ -24,367 +26,386 @@
             background-color: #d0d0d0;
             padding: 20px;
         }
+//		.leaflet-popup-content { width:auto !important; min-width: 200px; max-width: 600px;}
 		
-		.tube-popup-container { font-family: 'uniform', sans-serif; display: flex; align-items: top; } 
+		.tube-popup-container { font-family: 'uniform', sans-serif; display: flex; align-items: top;} 
 		.tube-popup-container tubelink { width: 114px; height: 64px; background-size: cover; background-position: center; cursor: pointer; }
 		.tube-popup-container tubetitle { font-size: 16px; font-weight: bold; padding-left: 10px} 
-	
-		
     </style>
 </head>
 <body>
-<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcrzTdyv0LlqfQQVnA3SdfYQa39JJLdLE&loading=async&callback=initMap&libraries=marker">
-</script>
-
-<script>
-function initMap() {
-	console.log("hello");
-	
-	const markers = [
-		{
-			name: 'Tehenek nélküli tehéntelep', 
-			lat: 47.771590068790694, 
-			lng: 20.24764049242839,
-			tubeId: 'KSZ9GEQhxew', 
-			tamogatas: 468000000.0			
-		}, 
-		{
-			name: 'Üresen álló 2.5 milliárd adófizetői pénzből támogatott új sárvári luxusszálloda',
-			lat: 47.249957646962706, 
-			lng: 16.944508996737806, 
-			tubeId: 'tINRHbB5vYQ',
-			tamogatas: 2500000000.0
-		}, 
-		{
-			name: 'A magyar adófizetők 1.3 milliárdjából épített horvátországi luxus óvoda', 
-			lat: 45.7468455,
-			lng: 18.5635315,
-			tubeId: 'y0FwoJnxv3Q',
-			tamogatas: 1300000000.0
-		}, 
-		{
-			name: 'Szigetszentmiklósi stadion csoda', 
-			lat: 47.3585726, 
-			lng: 19.006916,
-			tubeId: '0UseY0BPZIA'
-		}, 
-		{
-			name: 'Tarra vágott erdő az uniós támogatásból épült lombkorona sétány körül', 
-			lat: 47.58365141752803, 
-			lng: 21.90004291534396,
-			tubeId: 'x57YdTNmJtY', 
-			tamogatas: 60000000
-		}, 
-		{
-			name: 'Egy poklot bemutató turisztikai akció', 
-			lat: 47.9173078,
-			lng: 19.6783293, 
-			tubeId: 'OpkVKCbsaEM', 
-			tamogatas: 398000000
-		}, 
-		{
-			name: 'Egy fél méteres kilátó', 
-			lat: 46.9087375,
-			lng: 17.8179668, 
-			tubeId: 'uwr9p4xc2FE', 
-			tamogatas: 217000000
-		}, 
-		{
-			name: 'Biogáz üzem', 
-			lat: 47.05118245782748, 
-			lng: 17.13103427274371, 
-			tubeId: 'AmxkEM-CC6M', 
-			tamogatas: 550000000
-		}, 
-		{
-			name: 'Stilizált vártorony', 
-			lat: 47.818671863619414, 
-			lng: 19.054403139878865, 
-			tubeId: 'GOMC-95UXxM', 
-			tamogatas: 220000000
-		}, 
-		{
-			name: 'Üres “nevelési központ” egy szlovén falu szélén', 
-			lat: 46.6106348,
-			lng: 16.3683299, 
-			tubeId: 'bzKRmeT4qA0', 
-			tamogatas: 276000000
-		}, 
-		{
-			name: 'Szellemszáloda', 
-			lat: 46.5687505,
-			lng: 17.33431, 
-			tubeId: 'mAf4Qn4n_HE', 
-			tamogatas: 500000000
-		}, 
-		{
-			name: 'Marista Iskolatestvérek', 
-			lat: 47.7404539,
-			lng: 18.6920206, 
-			tubeId: 'tcrYdeXnYfQ', 
-			tamogatas: 48000000
-		}, 
-		{
-			name: 'Lekvárföző üzem és egy sportzentrum', 
-			lat: 47.9486045,
-			lng: 18.8645148, 
-			tubeId: '1dt0bGdIoQs', 
-			tamogatas: 59781060
-		}, 
-		{
-			name: 'Interaktív palóc hagyományokat bemutató ház', 
-			lat: 48.0540897,
-			lng: 19.6216953, 
-			tubeId: 'qfBd7mUAd64', 
-			tamogatas: 150530000
-		}, 
-		{
-			name: 'A zabari viskó, ahol furcsa módon küzdenek a gyermekszegénység ellen', 
-			lat: 48.1445361,
-			lng: 20.0057039, 
-			tubeId: 'V7ufdigIx-g', 
-			tamogatas: 21250000000 
-		}, 
-		{
-			name: 'Jelenlétház jelenlét nélkül', 
-			lat: 48.0380927,
-			lng: 19.8825994, 
-			tubeId: 'WBqDA5OPCQc', 
-			tamogatas: 400000000 
-		}, 
-		{
-			name: 'Orvos nincs, ezért a polgármester költözött a felújított lakásba', 
-			lat: 46.1315756,
-			lng: 19.3796315, 
-			tubeId: '-O8vfKlPsq8', 
-			tamogatas: 45000000 
-		}, 
-		{
-			name: 'Bölcsőde 12 kazári gyermeknek', 
-			lat: 48.0663526,
-			lng: 19.8292529, 
-			tubeId: 'm1FX0Qa7gPE', 
-			tamogatas: 677000000 
-		}, 
-		{
-			name: 'A pokol kapujában', 
-			lat: 47.9494935,
-			lng: 19.7220373, 
-			tubeId: 'wJ_QpJ3LZlM', 
-			tamogatas: 398091000 
-		}, 
-		{
-			name: 'Ifjúsági jurtatábor', 
-			lat: 48.5435987,
-			lng: 21.474147, 
-			tubeId: 'QSjwftJrn4M', 
-			tamogatas: 416000000 
-		}, 
-		{
-			name: 'Nemzeti Oltóanyaggyár', 
-			lat: 47.5307963,
-			lng: 21.4953739, 
-			tubeId: 'jY3Jl2dGq_w', 
-			tamogatas: 55000000000 
-		}, 
-		{
-			name: 'Egy érdekes repülőgépgyár', 
-			lat: 46.5877481,
-			lng: 17.5081876, 
-			tubeId: '8mPBBQxzwxM', 
-			tamogatas: 446000000 
-		}, 
-		{
-			name: 'Ebből lesznek Orbánék újabb legális milliárdjai', 
-			lat: 47.4167814,
-			lng: 18.3048197, 
-			tubeId: 'E-XhhT5WnkQ'
-		}, 
-		{
-			name: 'Egy szavazat tízezer forint', 
-			lat: 48.1353702,
-			lng: 20.2055293, 
-			tubeId: 'L6P4UezdtaM'
-		}, 
-		{
-			name: 'A mezőcsáti "ipari park" végeredménye', 
-			lat: 47.8246385,
-			lng: 20.8103021, 
-			tubeId: 'k10w4wT8JKg', 
-			tamogatas: 660000000 
-		}, 
-		{
-			name: 'Ez a magyar valóság', 
-			lat: 46.2598865,
-			lng: 18.3135679, 
-			tubeId: 'n4cktMRSEwI'
-		}, 
-		{
-			name: 'Papcsák zsebét tömi a lerohasztott egészségügy', 
-			lat: 47.5195381,
-			lng: 19.1009428, 
-			tubeId: '-p_0X1qGK8I'
-		}, 
-		{
-			name: 'Vendégmunkás lebuktatja az EU-s támogatást elcsaló polgármestert', 
-			lat: 48.0663526,
-			lng: 19.8292531, 
-			tubeId: 'mKho3UfkATw', 
-			tamogatas: 50000000 
-		}, 
-		{
-			name: 'Hatvanpuszta', 
-			lat: 47.4385,
-			lng: 18.6403105,
-			tubeId: '3nvVZsxIwsI' 
-		}, 
-		{
-			name: 'Így teszi tönkre egy fideszes képviselő a saját városát', 
-			lat: 47.635387,
-			lng: 21.227466,
-			tubeId: 'wvtE3XSJpDc' 
-		}, 
-		{
-			name: 'Ezt vette titokban Orbán 244 milliárdért a veje haverjától', 
-			lat: 47.521736290679584, 
-			lng: 19.117329037878992,
-			tubeId: 'DuM-3lRnrm4' 
-		}, 
-		{
-			name: 'A pécsi Volvo-gate', 
-			lat: 46.0777034,
-			lng: 18.1681814,
-			tubeId: '5MAc48hLzGg' 
-		}, 
-		{
-			name: 'Így titkolhatják el az egyházak, hogy hogyan adják át a közpénzt polgármesteri családi cégeknek', 
-			lat: 48.0610821,
-			lng: 21.7569487,
-			tubeId: 'BAIs6wXTsDg', 
-			tamogatas: 970990000000 			
-		}, 
-		{
-			name: '10 milliárd adófizetői pénzből épült fantomüzemekről', 
-			lat: 47.9409633,
-			lng: 22.2988698,
-			tubeId: 'b9OrxTSksv4', 
-			tamogatas: 10000000000
-		}, 
-		{
-			name: 'Kilátás nélküli kilátó Pétervásárán', 
-			lat: 48.0157,
-			lng: 20.0846064,
-			tubeId: 'kXQK4dVe0iQ', 
-			tamogatas: 35000000
-		}, 
-		{
-			name: 'Társasház lett a kutatóintézet helyén', 
-			lat: 46.9614026,
-			lng: 17.8474212,
-			tubeId: '7BPa0sd_6Mw', 
-			tamogatas: 900000000
-		}, 
-		{
-			name: 'Így intéztem el, hogy kikerüljön a tábla az EU-s támogatásból készült vendégházra', 
-			lat: 47.6140705,
-			lng: 21.8048241,
-			tubeId: '8w9j45tKiBg', 
-			tamogatas: 50000000
-		}, 
-		{
-			name: 'Kacsalábon forgó "falusi szálláshely"', 
-			lat: 48.0312741,
-			lng: 20.0230682,
-			tubeId: 'x0enotjecVg', 
-			tamogatas: 50000000
-		}, 
-		{
-			name: 'Kamu szövetkezet & kamu projekt', 
-			lat: 48.4064195,
-			lng: 20.9847557,
-			tubeId: 'KBwFEa01udQ', 
-			tamogatas: 20000000
-		}, 
-		{
-			name: 'Somlóvásárhely, “ökoturizmus fejlesztés”', 
-			lat: 47.1119872,
-			lng: 17.3240507,
-			tubeId: 'fcQGa1nWqag', 
-			tamogatas: 299000000
-		}, 
-		{
-			name: 'Eljöttem Méhkerékre', 
-			lat: 46.7823211,
-			lng: 21.3825723,
-			tubeId: 'N8Lq9YEeh58'
-		}, 
-		{
-			name: 'A parlament aranyozott falai helyett...', 
-			lat: 46.2648846,
-			lng: 18.1910982,
-			tubeId: 'M5zBrCDGwe0'
-		}, 
-		{
-			name: 'Idősek Napközi Otthonának "építése"', 
-			lat: 48.2445149,
-			lng: 20.6963117,
-			tubeId: 'M8xtabn5o5I'
-		}, 
-		{
-			name: 'Egy "ökopark" a Tisza partján', 
-			lat: 48.1513911,
-			lng: 21.4974327,
-			tubeId: 'tT073qN0mhI', 
-			tamogatas: 42550000
-		}, 
-		{
-			name: 'Bócsa / Csodahelyek Magyarországon', 
-			lat: 46.6882386,
-			lng: 18.7347221,
-			tubeId: 'kFkRLotzsmU', 
-			tamogatas: 630000000
-		}
-	];
-	
-	const infoWindow = new google.maps.InfoWindow({
-		minWidth: 200,
-		maxWidth: 600
-	});
-	
-	<!--a href="https://www.flaticon.com/free-icons/maps-and-location" title="maps and location icons">Maps and location icons created by kliwir art - Flaticon</a-->
-	const standardIcon = 'standard.png'
-	const moneyIconSmall = 'dollar_32.png'
-	const moneyIconMedium = 'dollar_48.png'
-	const moneyIconBig = 'dollar_64.png'
-	
-	const centerMap = { lat: 47.1834618, lng: 19.5 }
-	const bounds = new google.maps.LatLngBounds();
-	const mapOptions = {
-		center: centerMap,
-		zoom: 8, 
-		mapId: "DEMO_MAP_ID",
-		disableDefaultUI: true
-	};
-	const map = new google.maps.Map(document.getElementById("google-map"), mapOptions);
-	
-	for (let i = 0; i < markers.length; i++) {
-		let markerIcon 
-		if (markers[i]['tamogatas'] === undefined) {
-			markerIcon = standardIcon
-		} else if (markers[i]['tamogatas'] <= 50000000) {
-			markerIcon = moneyIconSmall
-		} else if (markers[i]['tamogatas'] <= 100000000) {
-			markerIcon = moneyIconMedium
-		} else {
-			markerIcon = moneyIconBig
-		}
-		const marker = new google.maps.Marker({ // new google.maps.marker.AdvancedMarkerElement({ // todo: update to AdvancedMarkerElement
-			position: { lat: markers[i]['lat'], lng: markers[i]['lng'] }, 
-			map: map, 
-			icon: markerIcon
+	<div class="container">
+        <!--div class="left">
+        </div-->
+        <div id="map" class="right">
+        </div>
+	</div>
+	<script>
+		const markers = [
+			{
+				name: 'Tehenek nélküli tehéntelep', 
+				lat: 47.771590068790694, 
+				lng: 20.24764049242839,
+				tubeId: 'KSZ9GEQhxew', 
+				tamogatas: 468000000.0			
+			}, 
+			{
+				name: 'Üresen álló 2.5 milliárd adófizetői pénzből támogatott új sárvári luxusszálloda',
+				lat: 47.249957646962706, 
+				lng: 16.944508996737806, 
+				tubeId: 'tINRHbB5vYQ',
+				tamogatas: 2500000000.0
+			}, 
+			{
+				name: 'A magyar adófizetők 1.3 milliárdjából épített horvátországi luxus óvoda', 
+				lat: 45.7696,
+				lng: 18.6057,
+				tubeId: 'y0FwoJnxv3Q',
+				tamogatas: 1300000000.0
+			}, 
+			{
+				name: 'Szigetszentmiklósi stadion csoda', 
+				lat: 47.3464,
+				lng: 19.0414,
+				tubeId: '0UseY0BPZIA'
+			}, 
+			{
+				name: 'Tarra vágott erdő az uniós támogatásból épült lombkorona sétány körül', 
+				lat: 47.576933,
+				lng: 21.918776,
+				tubeId: 'x57YdTNmJtY', 
+				tamogatas: 60000000
+			}, 
+			{
+				name: 'Egy poklot bemutató turisztikai akció', 
+				lat: 47.946086,
+				lng: 19.746372, 
+				tubeId: 'OpkVKCbsaEM', 
+				tamogatas: 398000000
+			}, 
+			{
+				name: 'Egy fél méteres kilátó', 
+				lat: 46.910935,
+				lng: 17.826707, 
+				tubeId: 'uwr9p4xc2FE', 
+				tamogatas: 217000000
+			}, 
+			{
+				name: 'Biogáz üzem', 
+				lat: 47.050889, 
+				lng: 17.131237, 
+				tubeId: 'AmxkEM-CC6M', 
+				tamogatas: 550000000
+			}, 
+			{
+				name: 'Stilizált vártorony', 
+				lat: 47.818503,
+				lng: 19.051875, 
+				tubeId: 'GOMC-95UXxM', 
+				tamogatas: 220000000
+			}, 
+			{
+				name: 'Üres “nevelési központ” egy szlovén falu szélén', 
+				lat: 46.61401,
+				lng: 16.38456, 
+				tubeId: 'bzKRmeT4qA0', 
+				tamogatas: 276000000
+			}, 
+			{
+				name: 'Szellemszáloda', 
+				lat: 46.5826,
+				lng: 17.4120, 
+				tubeId: 'mAf4Qn4n_HE', 
+				tamogatas: 500000000
+			}, 
+			{
+				name: 'Marista Iskolatestvérek', 
+				lat: 47.74283,
+				lng: 18.71770, 
+				tubeId: 'tcrYdeXnYfQ', 
+				tamogatas: 48000000
+			}, 
+			{
+				name: 'Lekvárföző üzem és egy sportzentrum',
+				lat: 47.93917,
+				lng: 19.04377, 
+				tubeId: '1dt0bGdIoQs', 
+				tamogatas: 59781060
+			}, 
+			{
+				name: 'Interaktív palóc hagyományokat bemutató ház', 
+				lat: 48.06953,
+				lng: 19.62553, 
+				tubeId: 'qfBd7mUAd64', 
+				tamogatas: 150530000
+			}, 
+			{
+				name: 'A zabari viskó, ahol furcsa módon küzdenek a gyermekszegénység ellen', 
+				lat: 48.13488,
+				lng: 20.0057039, 
+				tubeId: 'V7ufdigIx-g', 
+				tamogatas: 21250000000 
+			}, 
+			{
+				name: 'Jelenlétház jelenlét nélkül', 
+				lat: 48.03408,
+				lng: 19.90602, 
+				tubeId: 'WBqDA5OPCQc', 
+				tamogatas: 400000000 
+			}, 
+			{
+				name: 'Orvos nincs, ezért a polgármester költözött a felújított lakásba', 
+				lat: 46.13471,
+				lng: 19.42194, 
+				tubeId: '-O8vfKlPsq8', 
+				tamogatas: 45000000 
+			}, 
+			{
+				name: 'Bölcsőde 12 kazári gyermeknek', 
+				lat: 48.0500,
+				lng: 19.8547, 
+				tubeId: 'm1FX0Qa7gPE', 
+				tamogatas: 677000000 
+			}, 
+			{
+				name: 'A pokol kapujában', 
+				lat: 47.94998,
+				lng: 19.74380, 
+				tubeId: 'wJ_QpJ3LZlM', 
+				tamogatas: 398091000 
+			}, 
+			{
+				name: 'Ifjúsági jurtatábor',
+				lat: 48.54664,
+				lng: 21.48685, 
+				tubeId: 'QSjwftJrn4M', 
+				tamogatas: 416000000 
+			}, 
+			{
+				name: 'Nemzeti Oltóanyaggyár', 
+				lat: 47.53105,
+				lng: 21.62556, 
+				tubeId: 'jY3Jl2dGq_w', 
+				tamogatas: 55000000000 
+			}, 
+			{
+				name: 'Egy érdekes repülőgépgyár', 
+				lat: 46.5821,
+				lng: 17.6519, 
+				tubeId: '8mPBBQxzwxM', 
+				tamogatas: 446000000 
+			}, 
+			{
+				name: 'Ebből lesznek Orbánék újabb legális milliárdjai', 
+				lat: 47.3908,
+				lng: 18.3887, 
+				tubeId: 'E-XhhT5WnkQ'
+			}, 
+			{
+				name: 'Egy szavazat tízezer forint', 
+				lat: 48.15767,
+				lng: 20.25089, 
+				tubeId: 'L6P4UezdtaM'
+			}, 
+			{
+				name: 'A mezőcsáti "ipari park" végeredménye', 
+				lat: 47.8181,
+				lng: 20.9025, 
+				tubeId: 'k10w4wT8JKg', 
+				tamogatas: 660000000 
+			}, 
+			{
+				name: 'Ez a magyar valóság', 
+				lat: 46.27288,
+				lng: 18.39884, 
+				tubeId: 'n4cktMRSEwI'
+			}, 
+			{
+				name: 'Papcsák zsebét tömi a lerohasztott egészségügy', 
+				lat: 47.5195381,
+				lng: 19.1009428, 
+				tubeId: '-p_0X1qGK8I'
+			}, 
+			{
+				name: 'Vendégmunkás lebuktatja az EU-s támogatást elcsaló polgármestert', 
+				lat: 48.05380,
+				lng: 19.84697, 
+				tubeId: 'mKho3UfkATw', 
+				tamogatas: 50000000 
+			}, 
+			{
+				name: 'Hatvanpuszta', 
+				lat: 47.438565,
+				lng: 18.641540,
+				tubeId: '3nvVZsxIwsI' 
+			}, 
+			{
+				name: 'Így teszi tönkre egy fideszes képviselő a saját városát', 
+				lat: 47.635387,
+				lng: 21.227466,
+				tubeId: 'wvtE3XSJpDc' 
+			}, 
+			{
+				name: 'Ezt vette titokban Orbán 244 milliárdért a veje haverjától', 
+				lat: 47.521736290679584, 
+				lng: 19.117329037878992,
+				tubeId: 'DuM-3lRnrm4' 
+			}, 
+			{
+				name: 'A pécsi Volvo-gate', 
+				lat: 46.07591,
+				lng: 18.22769,
+				tubeId: '5MAc48hLzGg' 
+			}, 
+			{
+				name: 'Így titkolhatják el az egyházak, hogy hogyan adják át a közpénzt polgármesteri családi cégeknek', 
+				lat: 48.0672,
+				lng: 21.7982,
+				tubeId: 'BAIs6wXTsDg', 
+				tamogatas: 970990000000 			
+			}, 
+			{
+				name: '10 milliárd adófizetői pénzből épült fantomüzemekről', 
+				lat: 47.9409633,
+				lng: 22.2988698,
+				tubeId: 'b9OrxTSksv4', 
+				tamogatas: 10000000000
+			}, 
+			{
+				name: 'Kilátás nélküli kilátó Pétervásárán', 
+				lat: 48.0157,
+				lng: 20.0846064,
+				tubeId: 'kXQK4dVe0iQ', 
+				tamogatas: 35000000
+			}, 
+			{
+				name: 'Társasház lett a kutatóintézet helyén', 
+				lat: 46.9558,
+				lng: 17.8895,
+				tubeId: '7BPa0sd_6Mw', 
+				tamogatas: 900000000
+			}, 
+			{
+				name: 'Így intéztem el, hogy kikerüljön a tábla az EU-s támogatásból készült vendégházra', 
+				lat: 47.582326,
+				lng: 21.899883,
+				tubeId: '8w9j45tKiBg', 
+				tamogatas: 50000000
+			}, 
+			{
+				name: 'Kacsalábon forgó "falusi szálláshely"', 
+				lat: 48.0181,
+				lng: 20.0985,
+				tubeId: 'x0enotjecVg', 
+				tamogatas: 50000000
+			}, 
+			{
+				name: 'Kamu szövetkezet & kamu projekt', 
+				lat: 48.40884,
+				lng: 21.00217,
+				tubeId: 'KBwFEa01udQ', 
+				tamogatas: 20000000
+			}, 
+			{
+				name: 'Somlóvásárhely, “ökoturizmus fejlesztés”', 
+				lat: 47.12055,
+				lng: 17.37625,
+				tubeId: 'fcQGa1nWqag', 
+				tamogatas: 299000000
+			}, 
+			{
+				name: 'Eljöttem Méhkerékre', 
+				lat: 46.77461,
+				lng: 21.44960,
+				tubeId: 'N8Lq9YEeh58'
+			}, 
+			{
+				name: 'A parlament aranyozott falai helyett...', 
+				lat: 46.27537,
+				lng: 18.21190,
+				tubeId: 'M5zBrCDGwe0'
+			}, 
+			{
+				name: 'Idősek Napközi Otthonának "építése"', 
+				lat: 48.21283,
+				lng: 21.15091,
+				tubeId: 'M8xtabn5o5I'
+			}, 
+			{
+				name: 'Egy "ökopark" a Tisza partján', 
+				lat: 48.1715,
+				lng: 21.5373,
+				tubeId: 'tT073qN0mhI', 
+				tamogatas: 42550000
+			}, 
+			{
+				name: 'Bócsa / Csodahelyek Magyarországon', 
+				lat: 46.6128,
+				lng: 19.4825,
+				tubeId: 'kFkRLotzsmU', 
+				tamogatas: 630000000
+			}, 
+			{
+				name: 'Mini bölcsőde - vagy luxusvilla a város szélén', 
+				lat: 47.586509,
+				lng: 19.042783,
+				tubeId: 'bVDf4sEVGX4', 
+				tamogatas: 220000000
+			}
+		];	
+		
+		var map = L.map('map').setView([47.087, 19.341], 7);
+		var initialBounds = map.getBounds();
+		
+		L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			maxZoom: 19,
+			attribution: 
+			'<a href="https://www.flaticon.com/free-icons/maps-and-location" target="_blank">kliwir art | </a>' + 
+			'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>' 
+		}).addTo(map);
+		
+		var standardIcon = L.icon({
+			iconUrl: 'standard.png',
+			iconSize: [32,32],
+			iconAnchor: [16,32],
+			popupAnchor: [0,-32]
+		});
+		var moneyIconSmall = L.icon({
+			iconUrl: 'dollar_32.png',
+			iconSize: [32,32],			
+			iconAnchor: [16,32],
+			popupAnchor: [0,-32]
+		});
+		var moneyIconMedium = L.icon({
+			iconUrl: 'dollar_48.png',
+			iconSize: [48,48],			
+			iconAnchor: [24,48],
+			popupAnchor: [0,-48]
+		});
+		var moneyIconBig = L.icon({
+			iconUrl: 'dollar_64.png',
+			iconSize: [64,64],			
+			iconAnchor: [32,64],
+			popupAnchor: [0,-64]
 		});
 		
-		function createInfoWindow() {
+		for (let i = 0; i < markers.length; i++) {
+			let markerIcon 
+			if (markers[i]['tamogatas'] === undefined) {
+				markerIcon = standardIcon
+			} else if (markers[i]['tamogatas'] <= 50000000) {
+				markerIcon = moneyIconSmall
+			} else if (markers[i]['tamogatas'] <= 100000000) {
+				markerIcon = moneyIconMedium
+			} else {
+				markerIcon = moneyIconBig
+			}
+		
+		
+			var marker = L.marker(
+				[markers[i]['lat'], markers[i]['lng']], {icon:markerIcon}
+			).addTo(map);
+			
 			let tamogatas = ''
 			if (markers[i]['tamogatas'] !== undefined) {
 				tamogatas = formatNumber(markers[i]['tamogatas']);
@@ -397,41 +418,20 @@ function initMap() {
 						<div>${tamogatas}</div>
 					</tubetitle> 
 				</div>
-			`;
-			
-			google.maps.event.addListener(marker, 'click', function() {
-				infoWindow.setContent(infoWindowContent);
-				infoWindow.open(map, marker);
-			});
-			
+			`;			
+			marker.bindPopup(infoWindowContent);
+			//marker.getPopup().on('remove', function () {map.fitBounds(initialBounds)});
 		}
-		createInfoWindow();
 		
-		infoWindow.addListener('closeclick', function() {
-			map.fitBounds(bounds);
-		});
-		
-		bounds.extend(new google.maps.LatLng(markers[i]['lat'], markers[i]['lng']));
-		map.fitBounds(bounds)
-
-	}
-	
-}
-function formatNumber(num) {
-  if (num >= 1e9) {
-    return (num / 1e9).toFixed(1) + ' milliárd Ft';
-  } else if (num >= 1e6) {
-    return (num / 1e6).toFixed(1) + ' millió Ft';
-  } else {
-    return num.toString();
-  }
-}
-</script>
-    <div class="container">
-        <!--div class="left">
-        </div-->
-        <div id="google-map" class="right">
-        </div>
-    </div>
+		function formatNumber(num) {
+		  if (num >= 1e9) {
+			return (num / 1e9).toFixed(1) + ' milliárd Ft.';
+		  } else if (num >= 1e6) {
+			return (num / 1e6).toFixed(1) + ' millió Ft.';
+		  } else {
+			return num.toString();
+		  }
+		}		
+	</script>
 </body>
 </html>
